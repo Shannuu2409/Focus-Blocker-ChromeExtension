@@ -59,13 +59,7 @@ Then “Reload” the extension in `chrome://extensions`.
 - `declarativeNetRequest`: Block requests to distracting sites.
 - `alarms`: End sessions automatically and clear rules.
 
-## Troubleshooting
-- Popup is blank: reload the extension; ensure `npm run build` was run. Check the popup console (right‑click popup → Inspect) for 404s.
-- Sites not blocking: in the service worker console run:
-  ```js
-  chrome.declarativeNetRequest.getDynamicRules().then(r => console.log(r.map(x => x.condition.urlFilter)))
-  ```
-  You should see filters like `||youtube.com^`. If not, start Focus Mode again.
+
 
 ## Commit and Push to GitHub
 1. Initialize the repo (run in project root):
@@ -85,5 +79,4 @@ git branch -M main
 git push -u origin main
 ```
 
-## License
-MIT (or choose your preferred license)
+
