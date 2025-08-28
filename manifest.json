@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Focus Blocker Extension",
+  "version": "1.0.0",
+  "description": "A browser extension to block distracting websites.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "declarativeNetRequest",
+    "alarms"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "dist/index.html",
+    "default_icon": {
+      "16": "public/icon.png",
+      "48": "public/icon.png",
+      "128": "public/icon.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "blocked.html",
+        "public/*",
+        "dist/*",
+        "dist/assets/*"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Blocked - Focus Mode</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(to bottom, #1a1a1a, #111111);
+            color: #fff;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            padding: 2rem;
+        }
+        
+        .icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(to right, #3b82f6, #4f46e5);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        
+        p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .time {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .time span {
+            color: #10b981;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">
+            <!-- A simple shield icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+        </div>
+        <h1>Site Blocked</h1>
+        <p>This site is currently blocked to help you stay focused. Your focus session will end in:</p>
+        <div class="time">
+            <span id="timeLeft">Loading...</span>
+        </div>
+        <p>Stay strong! Remember why you started this focus session.</p>
+    </div>
+    <script>
+        // Function to get the remaining time from the active session
+        async function updateTimeLeft() {
+            try {
+                const sessions = await chrome.storage.sync.get('blockSessions');
+                const activeSessions = (sessions.blockSessions || [])
+                    .filter(s => s.is_active)
+                    .sort((a, b) => new Date(b.end_time) - new Date(a.end_time));
+
+                if (activeSessions.length > 0) {
+                    const session = activeSessions[0];
+                    const endTime = new Date(session.end_time);
+                    const now = new Date();
+                    const timeLeft = Math.max(0, endTime - now);
+                    
+                    const minutes = Math.floor(timeLeft / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    
+                    document.getElementById('timeLeft').textContent = 
+                        `${minutes}m ${seconds}s`;
+                }
+            } catch (error) {
+                console.error('Error updating time:', error);
+            }
+        }
+
+        // Update the time left every second
+        updateTimeLeft();
+        setInterval(updateTimeLeft, 1000);
+    </script>
+</body>
+</html>
